@@ -212,7 +212,7 @@ SPECTACULAR_SETTINGS = {
         'ValidationErrorEnum': 'django.core.exceptions.ValidationError',
     },
     'POSTPROCESSING_HOOKS': [
-        'drf_spectacular.hooks.postprocess_schema_enums'
+        # 'drf_spectacular.hooks.postprocess_schema_enums'  # Disabled due to enum iteration issue
     ],
     'SERVERS': [
         {

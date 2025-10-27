@@ -43,11 +43,11 @@ class User(AbstractUser):
         return f"{self.email} ({self.role})"
 
     @property
-    def full_name(self):
+    def full_name(self) -> str:
         return f"{self.first_name} {self.last_name}"
 
     @property
-    def is_verified(self):
+    def is_verified(self) -> bool:
         return self.is_phone_verified and self.is_email_verified and self.verification_status == 'verified'
 
 class UserProfile(BaseModel):

@@ -45,7 +45,7 @@ class ProductListSerializer(serializers.ModelSerializer):
             'review_count', 'distance', 'created_at'
         ]
 
-    def get_primary_image(self, obj):
+    def get_primary_image(self, obj) -> str | None:
         primary_image = obj.images.filter(is_primary=True).first()
         if primary_image:
             request = self.context.get('request')
@@ -53,16 +53,16 @@ class ProductListSerializer(serializers.ModelSerializer):
                 return request.build_absolute_uri(primary_image.image.url)
         return None
 
-    def get_average_rating(self, obj):
+    def get_average_rating(self, obj) -> float:
         reviews = obj.reviews.all()
         if reviews:
             return round(sum(review.rating for review in reviews) / len(reviews), 1)
         return 0
 
-    def get_review_count(self, obj):
+    def get_review_count(self, obj) -> int:
         return obj.reviews.count()
 
-    def get_distance(self, obj):
+    def get_distance(self, obj) -> float | None:
         # This would be calculated based on user's location in the view
         return self.context.get('distance', None)
 
@@ -92,16 +92,16 @@ class ProductDetailSerializer(serializers.ModelSerializer):
             'is_wishlisted', 'created_at', 'updated_at'
         ]
 
-    def get_average_rating(self, obj):
+    def get_average_rating(self, obj) -> float:
         reviews = obj.reviews.all()
         if reviews:
             return round(sum(review.rating for review in reviews) / len(reviews), 1)
         return 0
 
-    def get_review_count(self, obj):
+    def get_review_count(self, obj) -> int:
         return obj.reviews.count()
 
-    def get_is_wishlisted(self, obj):
+    def get_is_wishlisted(self, obj) -> bool:
         request = self.context.get('request')
         if request and request.user.is_authenticated:
             return Wishlist.objects.filter(user=request.user, product=obj).exists()

@@ -90,11 +90,11 @@ class Product(BaseModel):
         return f"{self.name} by {self.farmer.full_name}"
 
     @property
-    def total_value(self):
+    def total_value(self) -> float:
         return self.price_per_unit * self.quantity_available
 
     @property
-    def is_in_stock(self):
+    def is_in_stock(self) -> bool:
         return self.quantity_available > 0 and self.is_available
 
 class ProductImage(BaseModel):
