@@ -2,26 +2,28 @@
 
 import type React from "react"
 import { createContext, useContext, useState, useEffect } from "react"
+import { apiClient } from "./api"
 
 interface User {
   id: string
   email: string
-  name: string
-  role: "farmer" | "buyer"
+  first_name: string
+  last_name: string
+  role: "FARMER" | "BUYER" | "TRANSPORTER" | "COOPERATIVE" | "ADMIN"
   phone?: string
   location?: string
-  farmSize?: string
-  crops?: string[]
-  profileImage?: string
+  is_verified?: boolean
+  profile?: any
 }
 
 interface AuthContextType {
   user: User | null
   isLoading: boolean
   login: (email: string, password: string) => Promise<void>
-  signup: (email: string, password: string, name: string, role: "farmer" | "buyer") => Promise<void>
+  signup: (email: string, password: string, firstName: string, lastName: string, role: string, phone?: string) => Promise<void>
   logout: () => void
   isAuthenticated: boolean
+  refreshProfile: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -30,40 +32,41 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
-  // Check if user is logged in on mount
+  // Check if user is logged in on mount and fetch profile
   useEffect(() => {
-    const storedUser = localStorage.getItem("agriconnect_user")
-    if (storedUser) {
-      try {
-        setUser(JSON.parse(storedUser))
-      } catch (error) {
-        console.error("Failed to parse stored user:", error)
-        localStorage.removeItem("agriconnect_user")
+    const initializeAuth = async () => {
+      if (apiClient.isAuthenticated()) {
+        try {
+          const response = await apiClient.getProfile()
+          if (response.data) {
+            setUser(response.data)
+            localStorage.setItem("agriconnect_user", JSON.stringify(response.data))
+          } else {
+            // Token might be invalid, clear it
+            apiClient.logout()
+          }
+        } catch (error) {
+          console.error("Failed to fetch user profile:", error)
+          apiClient.logout()
+        }
       }
+      setIsLoading(false)
     }
-    setIsLoading(false)
+
+    initializeAuth()
   }, [])
 
   const login = async (email: string, password: string) => {
     setIsLoading(true)
     try {
-      // Simulate API call - in production, this would call your backend
-      await new Promise((resolve) => setTimeout(resolve, 500))
+      const response = await apiClient.login(email, password)
 
-      // Mock user data based on email
-      const mockUser: User = {
-        id: Math.random().toString(36).substr(2, 9),
-        email,
-        name: email.split("@")[0],
-        role: email.includes("farmer") ? "farmer" : "buyer",
-        phone: "+254712345678",
-        location: "Kisii, Kenya",
-        farmSize: "2 acres",
-        crops: ["Bananas", "Tea", "Avocados"],
+      if (response.data) {
+        setUser(response.data.user)
+        localStorage.setItem("agriconnect_user", JSON.stringify(response.data.user))
+      } else {
+        throw new Error(response.error || "Login failed")
       }
-
-      setUser(mockUser)
-      localStorage.setItem("agriconnect_user", JSON.stringify(mockUser))
     } catch (error) {
       console.error("Login failed:", error)
       throw error
@@ -72,25 +75,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  const signup = async (email: string, password: string, name: string, role: "farmer" | "buyer") => {
+  const signup = async (
+    email: string,
+    password: string,
+    firstName: string,
+    lastName: string,
+    role: string,
+    phone?: string
+  ) => {
     setIsLoading(true)
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 500))
-
-      const newUser: User = {
-        id: Math.random().toString(36).substr(2, 9),
+      const response = await apiClient.register({
         email,
-        name,
-        role,
-        phone: "+254712345678",
-        location: "Kisii, Kenya",
-        farmSize: role === "farmer" ? "2 acres" : undefined,
-        crops: role === "farmer" ? ["Bananas", "Tea", "Avocados"] : undefined,
-      }
+        password,
+        first_name: firstName,
+        last_name: lastName,
+        role: role.toUpperCase(),
+        phone
+      })
 
-      setUser(newUser)
-      localStorage.setItem("agriconnect_user", JSON.stringify(newUser))
+      if (response.data) {
+        // After successful registration, log the user in
+        await login(email, password)
+      } else {
+        throw new Error(response.error || "Registration failed")
+      }
     } catch (error) {
       console.error("Signup failed:", error)
       throw error
@@ -99,9 +108,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+  const refreshProfile = async () => {
+    try {
+      const response = await apiClient.getProfile()
+      if (response.data) {
+        setUser(response.data)
+        localStorage.setItem("agriconnect_user", JSON.stringify(response.data))
+      }
+    } catch (error) {
+      console.error("Failed to refresh profile:", error)
+    }
+  }
+
   const logout = () => {
     setUser(null)
-    localStorage.removeItem("agriconnect_user")
+    apiClient.logout()
   }
 
   return (
@@ -113,6 +134,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         signup,
         logout,
         isAuthenticated: !!user,
+        refreshProfile,
       }}
     >
       {children}

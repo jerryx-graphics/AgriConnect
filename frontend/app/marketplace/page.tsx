@@ -1,124 +1,99 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Navbar from "@/components/navbar"
-import { Search, MapPin, Star } from "lucide-react"
+import { Search, MapPin, Star, Loader2 } from "lucide-react"
 import Link from "next/link"
+import { apiClient } from "@/lib/api"
 
 interface Product {
   id: string
   name: string
-  farmer: string
-  price: number
-  image: string
-  rating: number
-  reviews: number
-  location: string
-  quantity: string
-  verified: boolean
-  category: string
+  farmer?: {
+    first_name: string
+    last_name: string
+  }
+  price: string
+  images?: Array<{ image: string }>
+  average_rating?: number
+  reviews_count?: number
+  location?: string
+  quantity_available?: string
+  verified?: boolean
+  category?: {
+    name: string
+  }
+  description?: string
 }
 
-const products: Product[] = [
-  {
-    id: "1",
-    name: "Fresh Bananas",
-    farmer: "Jane Moraa",
-    price: 2500,
-    image: "/fresh-bananas.jpg",
-    rating: 4.8,
-    reviews: 124,
-    location: "Kisii",
-    quantity: "50kg",
-    verified: true,
-    category: "Fruits",
-  },
-  {
-    id: "2",
-    name: "Organic Avocados",
-    farmer: "David Kipchoge",
-    price: 4200,
-    image: "/organic-avocados.png",
-    rating: 4.9,
-    reviews: 89,
-    location: "Kisii",
-    quantity: "30kg",
-    verified: true,
-    category: "Fruits",
-  },
-  {
-    id: "3",
-    name: "Tea Leaves (Premium)",
-    farmer: "Esther Nyaboke",
-    price: 8500,
-    image: "/premium-tea-leaves.jpg",
-    rating: 4.7,
-    reviews: 156,
-    location: "Gucha",
-    quantity: "20kg",
-    verified: true,
-    category: "Beverages",
-  },
-  {
-    id: "4",
-    name: "Fresh Tomatoes",
-    farmer: "Peter Omondi",
-    price: 1800,
-    image: "/fresh-tomatoes.png",
-    rating: 4.6,
-    reviews: 92,
-    location: "Kisii",
-    quantity: "40kg",
-    verified: true,
-    category: "Vegetables",
-  },
-  {
-    id: "5",
-    name: "Maize (Dried)",
-    farmer: "Grace Wanjiru",
-    price: 3200,
-    image: "/dried-maize.jpg",
-    rating: 4.5,
-    reviews: 67,
-    location: "Nyamira",
-    quantity: "100kg",
-    verified: true,
-    category: "Grains",
-  },
-  {
-    id: "6",
-    name: "Cabbage (Fresh)",
-    farmer: "Samuel Kiplagat",
-    price: 1200,
-    image: "/fresh-cabbage.jpg",
-    rating: 4.4,
-    reviews: 45,
-    location: "Kisii",
-    quantity: "60kg",
-    verified: false,
-    category: "Vegetables",
-  },
-]
-
-const categories = ["All", "Fruits", "Vegetables", "Grains", "Beverages"]
+interface Category {
+  id: string
+  name: string
+}
 
 export default function MarketplacePage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("All")
   const [sortBy, setSortBy] = useState("trending")
+  const [products, setProducts] = useState<Product[]>([])
+  const [categories, setCategories] = useState<Category[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState("")
 
-  const filteredProducts = products.filter((product) => {
-    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesCategory = selectedCategory === "All" || product.category === selectedCategory
-    return matchesSearch && matchesCategory
-  })
+  // Fetch categories
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await apiClient.getProductCategories()
+        if (response.data) {
+          setCategories(response.data)
+        }
+      } catch (error) {
+        console.error("Failed to fetch categories:", error)
+      }
+    }
+    fetchCategories()
+  }, [])
 
-  const sortedProducts = [...filteredProducts].sort((a, b) => {
-    if (sortBy === "price-low") return a.price - b.price
-    if (sortBy === "price-high") return b.price - a.price
-    if (sortBy === "rating") return b.rating - a.rating
+  // Fetch products
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setIsLoading(true)
+      setError("")
+
+      try {
+        const params: any = {}
+        if (searchTerm) params.search = searchTerm
+        if (selectedCategory !== "All") {
+          const category = categories.find(c => c.name === selectedCategory)
+          if (category) params.category = category.id
+        }
+
+        const response = await apiClient.getProducts(params)
+        if (response.data) {
+          setProducts(response.data.results || response.data)
+        } else {
+          setError(response.error || "Failed to fetch products")
+        }
+      } catch (error) {
+        console.error("Failed to fetch products:", error)
+        setError("Failed to fetch products")
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchProducts()
+  }, [searchTerm, selectedCategory, categories])
+
+  const sortedProducts = [...products].sort((a, b) => {
+    if (sortBy === "price-low") return parseFloat(a.price) - parseFloat(b.price)
+    if (sortBy === "price-high") return parseFloat(b.price) - parseFloat(a.price)
+    if (sortBy === "rating") return (b.average_rating || 0) - (a.average_rating || 0)
     return 0
   })
+
+  const categoryOptions = ["All", ...categories.map(c => c.name)]
 
   return (
     <main className="min-h-screen bg-background-secondary">
@@ -154,7 +129,7 @@ export default function MarketplacePage() {
           <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
             {/* Categories */}
             <div className="flex gap-2 overflow-x-auto pb-2">
-              {categories.map((cat) => (
+              {categoryOptions.map((cat) => (
                 <button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
@@ -187,7 +162,18 @@ export default function MarketplacePage() {
       {/* Products Grid */}
       <div className="px-6 py-12">
         <div className="max-w-6xl mx-auto">
-          {sortedProducts.length > 0 ? (
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+              {error}
+            </div>
+          )}
+
+          {isLoading ? (
+            <div className="flex justify-center items-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <span className="ml-2 text-foreground-secondary">Loading products...</span>
+            </div>
+          ) : sortedProducts.length > 0 ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {sortedProducts.map((product) => (
                 <Link key={product.id} href={`/product/${product.id}`}>
@@ -195,7 +181,7 @@ export default function MarketplacePage() {
                     {/* Image */}
                     <div className="relative h-48 bg-background-secondary overflow-hidden">
                       <img
-                        src={product.image || "/placeholder.svg"}
+                        src={product.images?.[0]?.image || "/placeholder.svg"}
                         alt={product.name}
                         className="w-full h-full object-cover hover:scale-105 transition-smooth"
                       />
@@ -209,32 +195,41 @@ export default function MarketplacePage() {
                     {/* Content */}
                     <div className="p-4 flex-1 flex flex-col">
                       <h3 className="text-lg font-bold text-foreground mb-1">{product.name}</h3>
-                      <p className="text-sm text-foreground-secondary mb-3">{product.farmer}</p>
+                      <p className="text-sm text-foreground-secondary mb-3">
+                        {product.farmer ?
+                          `${product.farmer.first_name} ${product.farmer.last_name}` :
+                          'Unknown Farmer'
+                        }
+                      </p>
 
                       {/* Location */}
-                      <div className="flex items-center gap-1 text-sm text-foreground-secondary mb-3">
-                        <MapPin size={16} />
-                        {product.location}
-                      </div>
+                      {product.location && (
+                        <div className="flex items-center gap-1 text-sm text-foreground-secondary mb-3">
+                          <MapPin size={16} />
+                          {product.location}
+                        </div>
+                      )}
 
                       {/* Rating */}
-                      <div className="flex items-center gap-2 mb-4">
-                        <div className="flex items-center gap-1">
-                          <Star size={16} className="fill-accent text-accent" />
-                          <span className="font-semibold text-foreground">{product.rating}</span>
+                      {product.average_rating && (
+                        <div className="flex items-center gap-2 mb-4">
+                          <div className="flex items-center gap-1">
+                            <Star size={16} className="fill-accent text-accent" />
+                            <span className="font-semibold text-foreground">{product.average_rating.toFixed(1)}</span>
+                          </div>
+                          <span className="text-sm text-foreground-secondary">({product.reviews_count || 0})</span>
                         </div>
-                        <span className="text-sm text-foreground-secondary">({product.reviews})</span>
-                      </div>
+                      )}
 
                       {/* Quantity and Price */}
                       <div className="flex justify-between items-end mt-auto">
                         <div>
                           <p className="text-xs text-foreground-secondary">Available</p>
-                          <p className="font-semibold text-foreground">{product.quantity}</p>
+                          <p className="font-semibold text-foreground">{product.quantity_available || 'Contact seller'}</p>
                         </div>
                         <div className="text-right">
                           <p className="text-xs text-foreground-secondary">Price</p>
-                          <p className="text-2xl font-bold text-primary">KES {product.price}</p>
+                          <p className="text-2xl font-bold text-primary">KES {parseFloat(product.price).toLocaleString()}</p>
                         </div>
                       </div>
                     </div>

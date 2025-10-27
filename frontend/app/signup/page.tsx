@@ -11,11 +11,13 @@ import Navbar from "@/components/navbar"
 
 export default function SignupPage() {
   const [formData, setFormData] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     email: "",
+    phone: "",
     password: "",
     confirmPassword: "",
-    role: "farmer" as "farmer" | "buyer",
+    role: "farmer" as "farmer" | "buyer" | "transporter",
   })
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState("")
@@ -45,10 +47,17 @@ export default function SignupPage() {
     setIsLoading(true)
 
     try {
-      await signup(formData.email, formData.password, formData.name, formData.role)
+      await signup(
+        formData.email,
+        formData.password,
+        formData.firstName,
+        formData.lastName,
+        formData.role,
+        formData.phone
+      )
       router.push("/dashboard")
-    } catch (err) {
-      setError("Signup failed. Please try again.")
+    } catch (err: any) {
+      setError(err.message || "Signup failed. Please try again.")
     } finally {
       setIsLoading(false)
     }
@@ -68,17 +77,31 @@ export default function SignupPage() {
             )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">Full Name</label>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  placeholder="John Doe"
-                  className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 bg-background"
-                  required
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-2">First Name</label>
+                  <input
+                    type="text"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    placeholder="John"
+                    className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 bg-background"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-2">Last Name</label>
+                  <input
+                    type="text"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    placeholder="Doe"
+                    className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 bg-background"
+                    required
+                  />
+                </div>
               </div>
 
               <div>
@@ -95,6 +118,18 @@ export default function SignupPage() {
               </div>
 
               <div>
+                <label className="block text-sm font-medium text-foreground mb-2">Phone Number (Optional)</label>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder="+254712345678"
+                  className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 bg-background"
+                />
+              </div>
+
+              <div>
                 <label className="block text-sm font-medium text-foreground mb-2">I am a</label>
                 <select
                   name="role"
@@ -104,6 +139,7 @@ export default function SignupPage() {
                 >
                   <option value="farmer">Farmer/Seller</option>
                   <option value="buyer">Buyer</option>
+                  <option value="transporter">Transporter</option>
                 </select>
               </div>
 

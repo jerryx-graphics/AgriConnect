@@ -26,8 +26,8 @@ export default function LoginPage() {
     try {
       await login(email, password)
       router.push("/dashboard")
-    } catch (err) {
-      setError("Login failed. Please try again.")
+    } catch (err: any) {
+      setError(err.message || "Login failed. Please try again.")
     } finally {
       setIsLoading(false)
     }
@@ -98,13 +98,6 @@ export default function LoginPage() {
               </p>
             </div>
 
-            {/* Demo credentials hint */}
-            <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-700">
-              <p className="font-semibold mb-2">Demo Credentials:</p>
-              <p>Email: farmer@example.com (Farmer)</p>
-              <p>Email: buyer@example.com (Buyer)</p>
-              <p>Password: any password</p>
-            </div>
           </div>
         </div>
       </div>
