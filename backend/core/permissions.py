@@ -10,22 +10,22 @@ class IsFarmerOrReadOnly(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.method in permissions.SAFE_METHODS:
             return True
-        return request.user.is_authenticated and request.user.role == 'farmer'
+        return request.user.is_authenticated and request.user.role == 'FARMER'
 
 class IsBuyerOrReadOnly(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.method in permissions.SAFE_METHODS:
             return True
-        return request.user.is_authenticated and request.user.role == 'buyer'
+        return request.user.is_authenticated and request.user.role == 'BUYER'
 
 class IsTransporterOrReadOnly(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.method in permissions.SAFE_METHODS:
             return True
-        return request.user.is_authenticated and request.user.role == 'transporter'
+        return request.user.is_authenticated and request.user.role == 'TRANSPORTER'
 
 class IsAdminOrReadOnly(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.method in permissions.SAFE_METHODS:
             return True
-        return request.user.is_authenticated and request.user.role == 'admin'
+        return request.user.is_authenticated and request.user.role == 'ADMIN'
