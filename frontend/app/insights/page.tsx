@@ -4,8 +4,8 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 import { ProtectedRoute } from "@/components/protected-route"
+import { DashboardLayout } from "@/components/dashboard-layout"
 import { useAuth } from "@/lib/auth-context"
-import Navbar from "@/components/navbar"
 import { TrendingUp, Brain, BarChart3, Target, Lightbulb, Clock, Star, ArrowUp, ArrowDown } from "lucide-react"
 import { apiClient } from "@/lib/api"
 import {
@@ -157,102 +157,98 @@ function InsightsContent() {
   ]
 
   return (
-    <main className="min-h-screen bg-background-secondary">
-      <Navbar />
+    <div className="space-y-6">
+      {/* Header */}
+      <div>
+        <h1 className="text-3xl font-bold text-green-900 mb-2">AI Market Insights</h1>
+        <p className="text-green-600">Data-driven insights to optimize your agricultural business</p>
+      </div>
 
-      <div className="pt-32 pb-12 px-6">
-        <div className="max-w-7xl mx-auto">
-          {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold text-foreground mb-2">AI Market Insights</h1>
-            <p className="text-foreground-secondary">Data-driven insights to optimize your agricultural business</p>
+      {/* AI Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-green-100">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-green-600 mb-1">Price Predictions</p>
+              <p className="text-3xl font-bold text-green-900">{pricePredictions.length || '8'}</p>
+            </div>
+            <TrendingUp className="text-green-600" size={32} />
           </div>
+          <p className="text-xs text-green-600 mt-2">92% accuracy</p>
+        </div>
 
-          {/* AI Stats */}
-          <div className="grid md:grid-cols-4 gap-6 mb-8">
-            <div className="bg-white rounded-xl p-6 shadow-sm border border-border">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-foreground-secondary mb-1">Price Predictions</p>
-                  <p className="text-3xl font-bold text-foreground">{pricePredictions.length || '8'}</p>
-                </div>
-                <TrendingUp className="text-primary" size={32} />
-              </div>
-              <p className="text-xs text-green-600 mt-2">92% accuracy</p>
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-green-100">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-green-600 mb-1">Market Insights</p>
+              <p className="text-3xl font-bold text-green-900">{marketInsights.length || '12'}</p>
             </div>
-
-            <div className="bg-white rounded-xl p-6 shadow-sm border border-border">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-foreground-secondary mb-1">Market Insights</p>
-                  <p className="text-3xl font-bold text-foreground">{marketInsights.length || '12'}</p>
-                </div>
-                <Brain className="text-accent" size={32} />
-              </div>
-              <p className="text-xs text-foreground-secondary mt-2">Updated hourly</p>
-            </div>
-
-            <div className="bg-white rounded-xl p-6 shadow-sm border border-border">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-foreground-secondary mb-1">Recommendations</p>
-                  <p className="text-3xl font-bold text-foreground">{recommendations.length || '6'}</p>
-                </div>
-                <Target className="text-green-600" size={32} />
-              </div>
-              <p className="text-xs text-primary mt-2">3 high priority</p>
-            </div>
-
-            <div className="bg-white rounded-xl p-6 shadow-sm border border-border">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-foreground-secondary mb-1">AI Model Health</p>
-                  <p className="text-lg font-bold text-green-600">Excellent</p>
-                </div>
-                <BarChart3 className="text-green-600" size={32} />
-              </div>
-              <p className="text-xs text-foreground-secondary mt-2">Last updated: 2h ago</p>
-            </div>
+            <Brain className="text-yellow-600" size={32} />
           </div>
+          <p className="text-xs text-gray-600 mt-2">Updated hourly</p>
+        </div>
 
-          {/* Error Message */}
-          {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
-              {error}
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-green-100">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-green-600 mb-1">Recommendations</p>
+              <p className="text-3xl font-bold text-green-900">{recommendations.length || '6'}</p>
             </div>
-          )}
+            <Target className="text-green-600" size={32} />
+          </div>
+          <p className="text-xs text-green-600 mt-2">3 high priority</p>
+        </div>
 
-          {/* Tabs */}
-          <div className="bg-white rounded-xl shadow-sm border border-border mb-8">
-            <div className="border-b border-border">
-              <nav className="flex space-x-8 px-6">
-                {[
-                  { id: "overview", label: "Overview" },
-                  { id: "predictions", label: "Price Predictions" },
-                  { id: "insights", label: "Market Insights" },
-                  { id: "recommendations", label: "Recommendations" }
-                ].map((tab) => (
-                  <button
-                    key={tab.id}
-                    onClick={() => setActiveTab(tab.id)}
-                    className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                      activeTab === tab.id
-                        ? "border-primary text-primary"
-                        : "border-transparent text-foreground-secondary hover:text-foreground"
-                    }`}
-                  >
-                    {tab.label}
-                  </button>
-                ))}
-              </nav>
+        <div className="bg-white rounded-xl p-6 shadow-sm border border-green-100">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-green-600 mb-1">AI Model Health</p>
+              <p className="text-lg font-bold text-green-600">Excellent</p>
             </div>
+            <BarChart3 className="text-green-600" size={32} />
+          </div>
+          <p className="text-xs text-gray-600 mt-2">Last updated: 2h ago</p>
+        </div>
+      </div>
 
-            <div className="p-6">
-              {isLoading ? (
-                <div className="text-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-                  <p className="text-foreground-secondary">Loading AI insights...</p>
-                </div>
+      {/* Error Message */}
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+          {error}
+        </div>
+      )}
+
+      {/* Tabs */}
+      <div className="bg-white rounded-xl shadow-sm border border-green-100">
+        <div className="border-b border-green-100">
+          <nav className="flex space-x-8 px-6">
+            {[
+              { id: "overview", label: "Overview" },
+              { id: "predictions", label: "Price Predictions" },
+              { id: "insights", label: "Market Insights" },
+              { id: "recommendations", label: "Recommendations" }
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                  activeTab === tab.id
+                    ? "border-green-600 text-green-600"
+                    : "border-transparent text-gray-600 hover:text-green-600"
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </nav>
+        </div>
+
+        <div className="p-6">
+          {isLoading ? (
+            <div className="text-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto mb-4"></div>
+              <p className="text-gray-600">Loading AI insights...</p>
+            </div>
               ) : activeTab === "overview" ? (
                 <div className="space-y-8">
                   {/* Price Trends Chart */}
@@ -418,52 +414,52 @@ function InsightsContent() {
                   </div>
                 )
               )}
-            </div>
-          </div>
+        </div>
+      </div>
 
-          {/* AI Model Info */}
-          <div className="bg-white rounded-xl p-8 shadow-sm border border-border">
-            <h2 className="text-2xl font-bold text-foreground mb-6">How Our AI Works</h2>
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="text-center">
-                <div className="bg-primary/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                  <Brain className="text-primary" size={24} />
-                </div>
-                <h3 className="text-lg font-bold text-foreground mb-2">Machine Learning</h3>
-                <p className="text-foreground-secondary">
-                  Advanced algorithms analyze historical market data, weather patterns, and demand trends to generate accurate predictions.
-                </p>
-              </div>
-              <div className="text-center">
-                <div className="bg-accent/10 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                  <BarChart3 className="text-accent" size={24} />
-                </div>
-                <h3 className="text-lg font-bold text-foreground mb-2">Real-time Analysis</h3>
-                <p className="text-foreground-secondary">
-                  Continuous monitoring of market conditions, price fluctuations, and supply-demand dynamics for up-to-date insights.
-                </p>
-              </div>
-              <div className="text-center">
-                <div className="bg-green-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                  <Target className="text-green-600" size={24} />
-                </div>
-                <h3 className="text-lg font-bold text-foreground mb-2">Actionable Recommendations</h3>
-                <p className="text-foreground-secondary">
-                  Personalized suggestions for optimal planting times, pricing strategies, and market opportunities.
-                </p>
-              </div>
+      {/* AI Model Info */}
+      <div className="bg-white rounded-xl p-8 shadow-sm border border-green-100">
+        <h2 className="text-2xl font-bold text-green-900 mb-6">How Our AI Works</h2>
+        <div className="grid md:grid-cols-3 gap-8">
+          <div className="text-center">
+            <div className="bg-green-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+              <Brain className="text-green-600" size={24} />
             </div>
+            <h3 className="text-lg font-bold text-green-900 mb-2">Machine Learning</h3>
+            <p className="text-gray-600">
+              Advanced algorithms analyze historical market data, weather patterns, and demand trends to generate accurate predictions.
+            </p>
+          </div>
+          <div className="text-center">
+            <div className="bg-yellow-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+              <BarChart3 className="text-yellow-600" size={24} />
+            </div>
+            <h3 className="text-lg font-bold text-green-900 mb-2">Real-time Analysis</h3>
+            <p className="text-gray-600">
+              Continuous monitoring of market conditions, price fluctuations, and supply-demand dynamics for up-to-date insights.
+            </p>
+          </div>
+          <div className="text-center">
+            <div className="bg-green-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+              <Target className="text-green-600" size={24} />
+            </div>
+            <h3 className="text-lg font-bold text-green-900 mb-2">Actionable Recommendations</h3>
+            <p className="text-gray-600">
+              Personalized suggestions for optimal planting times, pricing strategies, and market opportunities.
+            </p>
           </div>
         </div>
       </div>
-    </main>
+    </div>
   )
 }
 
 export default function InsightsPage() {
   return (
     <ProtectedRoute>
-      <InsightsContent />
+      <DashboardLayout>
+        <InsightsContent />
+      </DashboardLayout>
     </ProtectedRoute>
   )
 }

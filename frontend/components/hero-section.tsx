@@ -18,7 +18,7 @@ export default function HeroSection() {
       <div className="relative z-10 px-6 max-w-4xl mx-auto">
         {/* Headline */}
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white mb-6 leading-tight text-balance">
-          Turn your Produce into profit. <span className="text-accent">Join AgriConnect</span>
+          Turn your Produce into <span className="text-yellow-400">Profit</span>. <span className="text-green-400">Join AgriConnect</span>
         </h1>
 
         {/* Tagline */}
@@ -31,14 +31,14 @@ export default function HeroSection() {
         <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">
           <Link
             href="/register?role=farmer"
-            className="inline-flex items-center justify-center gap-2 bg-primary hover:bg-primary-dark text-white font-semibold px-8 py-4 rounded-full shadow-lg transition-smooth hover:shadow-xl"
+            className="inline-flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white font-semibold px-8 py-4 rounded-full shadow-lg transition-smooth hover:shadow-xl"
           >
             Join as Farmer
             <ArrowRight size={20} />
           </Link>
           <Link
             href="/marketplace"
-            className="inline-flex items-center justify-center gap-2 bg-white hover:bg-background-secondary text-primary font-semibold px-8 py-4 rounded-full shadow-lg transition-smooth hover:shadow-xl"
+            className="inline-flex items-center justify-center gap-2 bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-semibold px-8 py-4 rounded-full shadow-lg transition-smooth hover:shadow-xl"
           >
             Explore Marketplace
             <ArrowRight size={20} />
@@ -63,8 +63,8 @@ export default function HeroSection() {
       </div>
 
       {/* Animated gradient orb (decorative) */}
-      <div className="absolute top-20 right-10 w-72 h-72 bg-primary/20 rounded-full blur-3xl opacity-20 animate-pulse" />
-      <div className="absolute bottom-20 left-10 w-96 h-96 bg-accent/10 rounded-full blur-3xl opacity-20 animate-pulse" />
+      <div className="absolute top-20 right-10 w-72 h-72 bg-green-500/20 rounded-full blur-3xl opacity-20 animate-pulse" />
+      <div className="absolute bottom-20 left-10 w-96 h-96 bg-yellow-400/15 rounded-full blur-3xl opacity-20 animate-pulse" />
     </section>
   )
 }

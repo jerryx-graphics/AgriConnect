@@ -134,16 +134,16 @@ function DashboardContent() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6">
-        <div>
-          <h1 className="text-3xl font-bold text-green-900 mb-1">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-8">
+        <div className="mb-4 lg:mb-0">
+          <h1 className="text-3xl lg:text-4xl font-bold text-green-900 mb-2">
             {isFarmer ? "Farmer Dashboard" : isBuyer ? "Buyer Dashboard" : "Dashboard"}
           </h1>
-          <p className="text-green-600">Welcome back, {user?.first_name} {user?.last_name}</p>
+          <p className="text-green-600 text-lg">Welcome back, {user?.first_name} {user?.last_name}</p>
         </div>
-        <div className="flex items-center space-x-3 mt-4 sm:mt-0">
-          <div className="text-sm text-green-600">
-            <Calendar size={16} className="inline mr-1" />
+        <div className="flex items-center space-x-3">
+          <div className="text-sm text-green-600 bg-green-50 px-4 py-2 rounded-lg">
+            <Calendar size={16} className="inline mr-2" />
             {new Date().toLocaleDateString('en-US', {
               weekday: 'long',
               year: 'numeric',
@@ -155,20 +155,20 @@ function DashboardContent() {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-8">
         <div className="bg-white rounded-xl p-6 shadow-sm border border-green-100 hover:shadow-md transition-shadow">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-green-600 mb-1">{isFarmer ? "Total Revenue" : "Total Spent"}</p>
-              <p className="text-3xl font-bold text-green-900">
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex-1">
+              <p className="text-sm font-medium text-green-600 mb-2">{isFarmer ? "Total Revenue" : "Total Spent"}</p>
+              <p className="text-2xl lg:text-3xl font-bold text-green-900">
                 {isLoading ? "..." : `KES ${dashboardStats.totalRevenue.toLocaleString()}`}
               </p>
             </div>
-            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-              <DollarSign className="text-green-600" size={24} />
+            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <DollarSign className="text-green-600" size={20} />
             </div>
           </div>
-          <div className="flex items-center mt-4 text-sm">
+          <div className="flex items-center text-sm">
             <ArrowUpRight size={16} className="text-green-500 mr-1" />
             <span className="text-green-500 font-medium">+{dashboardStats.monthlyGrowth}%</span>
             <span className="text-green-600 ml-1">this month</span>
@@ -176,62 +176,62 @@ function DashboardContent() {
         </div>
 
         <div className="bg-white rounded-xl p-6 shadow-sm border border-green-100 hover:shadow-md transition-shadow">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-green-600 mb-1">
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex-1">
+              <p className="text-sm font-medium text-green-600 mb-2">
                 {isFarmer ? "Active Products" : "Saved Items"}
               </p>
-              <p className="text-3xl font-bold text-green-900">
+              <p className="text-2xl lg:text-3xl font-bold text-green-900">
                 {isLoading ? "..." : dashboardStats.activeListings}
               </p>
             </div>
-            <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
-              <Package className="text-orange-600" size={24} />
+            <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <Package className="text-orange-600" size={20} />
             </div>
           </div>
-          <div className="flex items-center mt-4 text-sm">
+          <div className="flex items-center text-sm">
             <Activity size={16} className="text-orange-500 mr-1" />
             <span className="text-green-600">{dashboardStats.pendingOrders} pending orders</span>
           </div>
         </div>
 
         <div className="bg-white rounded-xl p-6 shadow-sm border border-green-100 hover:shadow-md transition-shadow">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-green-600 mb-1">
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex-1">
+              <p className="text-sm font-medium text-green-600 mb-2">
                 {isFarmer ? "Total Orders" : "Orders Placed"}
               </p>
-              <p className="text-3xl font-bold text-green-900">
+              <p className="text-2xl lg:text-3xl font-bold text-green-900">
                 {isLoading ? "..." : dashboardStats.completedOrders}
               </p>
             </div>
-            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-              <ShoppingCart className="text-blue-600" size={24} />
+            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <ShoppingCart className="text-blue-600" size={20} />
             </div>
           </div>
-          <div className="flex items-center mt-4 text-sm">
+          <div className="flex items-center text-sm">
             <Target size={16} className="text-blue-500 mr-1" />
             <span className="text-green-600">98% success rate</span>
           </div>
         </div>
 
         <div className="bg-white rounded-xl p-6 shadow-sm border border-green-100 hover:shadow-md transition-shadow">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-green-600 mb-1">{isFarmer ? "Avg Rating" : "Total Views"}</p>
-              <p className="text-3xl font-bold text-green-900">
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex-1">
+              <p className="text-sm font-medium text-green-600 mb-2">{isFarmer ? "Avg Rating" : "Total Views"}</p>
+              <p className="text-2xl lg:text-3xl font-bold text-green-900">
                 {isLoading ? "..." : isFarmer ? `${dashboardStats.rating}/5` : dashboardStats.totalViews.toLocaleString()}
               </p>
             </div>
-            <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
+            <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center flex-shrink-0">
               {isFarmer ? (
-                <Star className="text-yellow-600" size={24} />
+                <Star className="text-yellow-600" size={20} />
               ) : (
-                <Eye className="text-yellow-600" size={24} />
+                <Eye className="text-yellow-600" size={20} />
               )}
             </div>
           </div>
-          <div className="flex items-center mt-4 text-sm">
+          <div className="flex items-center text-sm">
             <Users size={16} className="text-yellow-500 mr-1" />
             <span className="text-green-600">{isFarmer ? "Based on 156 reviews" : "This month"}</span>
           </div>
@@ -239,7 +239,7 @@ function DashboardContent() {
       </div>
 
       {/* Charts */}
-      <div className="grid lg:grid-cols-2 gap-6 mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         {/* Performance Chart */}
         <div className="bg-white rounded-xl p-6 shadow-sm border border-green-100">
           <div className="flex items-center justify-between mb-4">
@@ -394,7 +394,7 @@ function DashboardContent() {
                       <ShoppingCart size={32} className="text-green-400" />
                       <span>No orders found</span>
                       <Link
-                        href="/marketplace"
+                        href="/dashboard/marketplace"
                         className="text-green-600 hover:text-green-700 font-medium"
                       >
                         Browse Products
@@ -450,7 +450,7 @@ function DashboardContent() {
       </div>
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {isFarmer ? (
           <>
             <Link
@@ -468,7 +468,7 @@ function DashboardContent() {
               <span className="font-semibold">View Analytics</span>
             </Link>
             <Link
-              href="/marketplace"
+              href="/dashboard/marketplace"
               className="flex items-center justify-center gap-3 bg-blue-600 text-white p-4 rounded-xl hover:bg-blue-700 transition-colors shadow-sm group"
             >
               <ShoppingCart size={20} className="group-hover:scale-110 transition-transform" />
@@ -478,7 +478,7 @@ function DashboardContent() {
         ) : (
           <>
             <Link
-              href="/marketplace"
+              href="/dashboard/marketplace"
               className="flex items-center justify-center gap-3 bg-green-600 text-white p-4 rounded-xl hover:bg-green-700 transition-colors shadow-sm group"
             >
               <ShoppingCart size={20} className="group-hover:scale-110 transition-transform" />

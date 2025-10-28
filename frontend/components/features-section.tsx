@@ -26,7 +26,7 @@ const features = [
 
 export default function FeaturesSection() {
   return (
-    <section className="py-20 px-6 bg-background-secondary">
+    <section className="py-20 px-6 bg-gradient-to-b from-yellow-50 to-green-50">
       <div className="max-w-6xl mx-auto">
         {/* Section header */}
         <div className="text-center mb-16">
@@ -45,8 +45,8 @@ export default function FeaturesSection() {
                 key={index}
                 className="bg-white rounded-xl p-6 shadow-sm hover:shadow-lg transition-smooth border border-border"
               >
-                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                  <Icon size={24} className="text-primary" />
+                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                  <Icon size={24} className="text-green-600" />
                 </div>
                 <h3 className="text-lg font-bold text-foreground mb-2">{feature.title}</h3>
                 <p className="text-foreground-secondary text-sm leading-relaxed">{feature.description}</p>

@@ -238,6 +238,55 @@ class ApiClient {
   }
 
   async createProduct(productData: any): Promise<ApiResponse<any>> {
+    // Handle FormData for file uploads
+    if (productData instanceof FormData) {
+      const url = `${this.baseURL}/products/create/`
+      const headers: Record<string, string> = {}
+
+      if (this.accessToken) {
+        headers.Authorization = `Bearer ${this.accessToken}`
+      }
+
+      try {
+        let response = await fetch(url, {
+          method: 'POST',
+          headers,
+          body: productData,
+        })
+
+        // If token expired, try to refresh
+        if (response.status === 401 && this.refreshToken) {
+          const refreshed = await this.refreshAccessToken()
+          if (refreshed) {
+            headers.Authorization = `Bearer ${this.accessToken}`
+            response = await fetch(url, {
+              method: 'POST',
+              headers,
+              body: productData,
+            })
+          }
+        }
+
+        const data = await response.json()
+
+        if (response.ok) {
+          if (data.success && data.data) {
+            return { data: data.data, message: data.message }
+          }
+          return { data }
+        } else {
+          return {
+            error: data.detail || data.message || data.errors || 'An error occurred',
+            data: data
+          }
+        }
+      } catch (error) {
+        console.error('API request failed:', error)
+        return { error: 'Network error occurred' }
+      }
+    }
+
+    // Fallback to JSON for non-FormData requests
     return this.makeRequest('/products/create/', {
       method: 'POST',
       body: JSON.stringify(productData),

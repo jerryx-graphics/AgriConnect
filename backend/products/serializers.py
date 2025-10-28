@@ -51,6 +51,9 @@ class ProductListSerializer(serializers.ModelSerializer):
             request = self.context.get('request')
             if request:
                 return request.build_absolute_uri(primary_image.image.url)
+            else:
+                # Fallback when no request context
+                return f"http://localhost:8000{primary_image.image.url}"
         return None
 
     def get_average_rating(self, obj) -> float:

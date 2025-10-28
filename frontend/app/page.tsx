@@ -15,7 +15,7 @@ export default function Home() {
       <FeaturesSection />
 
       {/* CTA Section */}
-      <section className="py-20 px-6 bg-primary text-white">
+      <section className="py-20 px-6 bg-gradient-to-r from-green-600 to-green-700 text-white">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">Ready to Transform Your Agricultural Business?</h2>
           <p className="text-lg text-white/90 mb-8 max-w-2xl mx-auto">
@@ -24,7 +24,7 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Link
               href="/register?role=farmer"
-              className="inline-flex items-center justify-center gap-2 bg-white hover:bg-background-secondary text-primary font-bold px-8 py-4 rounded-full transition-smooth"
+              className="inline-flex items-center justify-center gap-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold px-8 py-4 rounded-full transition-smooth"
             >
               Start Selling
               <ArrowRight size={20} />
@@ -41,7 +41,7 @@ export default function Home() {
       </section>
 
       {/* Benefits Section */}
-      <section className="py-20 px-6 bg-background-secondary">
+      <section className="py-20 px-6 bg-gradient-to-b from-green-50 to-yellow-50">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-4xl font-bold text-foreground text-center mb-16">Why Farmers Choose AgriConnect</h2>
           <div className="grid md:grid-cols-3 gap-8">
@@ -53,12 +53,12 @@ export default function Home() {
               { title: "Direct Buyers", desc: "Connect with verified restaurants, retailers, and exporters" },
               { title: "24/7 Support", desc: "AgriBot assistant available in your local language" },
             ].map((benefit, idx) => (
-              <div key={idx} className="bg-white rounded-xl p-6 shadow-sm border border-border">
+              <div key={idx} className="bg-white rounded-xl p-6 shadow-sm border border-green-200 hover:border-green-300 transition-smooth">
                 <div className="flex items-start gap-3 mb-4">
-                  <CheckCircle className="text-primary flex-shrink-0 mt-1" size={24} />
-                  <h3 className="text-lg font-bold text-foreground">{benefit.title}</h3>
+                  <CheckCircle className="text-green-600 flex-shrink-0 mt-1" size={24} />
+                  <h3 className="text-lg font-bold text-gray-900">{benefit.title}</h3>
                 </div>
-                <p className="text-foreground-secondary">{benefit.desc}</p>
+                <p className="text-gray-600">{benefit.desc}</p>
               </div>
             ))}
           </div>

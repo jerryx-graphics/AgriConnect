@@ -56,7 +56,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     },
     {
       name: "Marketplace",
-      href: "/marketplace",
+      href: "/dashboard/marketplace",
       icon: Store,
       show: true
     },
@@ -118,7 +118,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   }
 
   return (
-    <div className="min-h-screen bg-green-50">
+    <div className="h-screen bg-green-50 flex overflow-hidden">
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div
@@ -129,12 +129,12 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
       {/* Sidebar */}
       <div className={`
-        fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-xl transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0
+        fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-xl transform transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0 flex-shrink-0
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
         <div className="flex flex-col h-full">
-          {/* Logo section */}
-          <div className="flex items-center justify-between h-16 px-6 border-b border-green-100">
+          {/* Logo section - Fixed */}
+          <div className="flex items-center justify-between h-16 px-6 border-b border-green-100 flex-shrink-0">
             <Link href="/dashboard" className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">A</span>
@@ -149,8 +149,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             </button>
           </div>
 
-          {/* User info */}
-          <div className="p-6 border-b border-green-100">
+          {/* User info - Fixed */}
+          <div className="p-6 border-b border-green-100 flex-shrink-0">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
                 <User size={20} className="text-green-600" />
@@ -164,84 +164,87 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             </div>
           </div>
 
-          {/* Navigation */}
-          <nav className="flex-1 px-4 py-6 space-y-1">
-            {navigationItems
-              .filter(item => item.show)
-              .map((item) => {
-                const isActive = isActiveRoute(item.href)
-                return (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className={`
-                      flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200
-                      ${isActive
-                        ? 'bg-green-100 text-green-800 shadow-sm'
-                        : 'text-green-700 hover:bg-green-50 hover:text-green-800'
-                      }
-                    `}
-                    onClick={() => setSidebarOpen(false)}
-                  >
-                    <item.icon
-                      size={20}
-                      className={`mr-3 ${isActive ? 'text-green-600' : 'text-green-500'}`}
-                    />
-                    {item.name}
-                    {isActive && (
-                      <ChevronRight size={16} className="ml-auto text-green-600" />
-                    )}
-                  </Link>
-                )
-              })}
-          </nav>
+          {/* Scrollable content area */}
+          <div className="flex-1 overflow-y-auto">
+            {/* Navigation */}
+            <nav className="px-4 py-6 space-y-1">
+              {navigationItems
+                .filter(item => item.show)
+                .map((item) => {
+                  const isActive = isActiveRoute(item.href)
+                  return (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      className={`
+                        flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200
+                        ${isActive
+                          ? 'bg-green-100 text-green-800 shadow-sm'
+                          : 'text-green-700 hover:bg-green-50 hover:text-green-800'
+                        }
+                      `}
+                      onClick={() => setSidebarOpen(false)}
+                    >
+                      <item.icon
+                        size={20}
+                        className={`mr-3 ${isActive ? 'text-green-600' : 'text-green-500'}`}
+                      />
+                      {item.name}
+                      {isActive && (
+                        <ChevronRight size={16} className="ml-auto text-green-600" />
+                      )}
+                    </Link>
+                  )
+                })}
+            </nav>
 
-          {/* Quick actions */}
-          <div className="p-4 border-t border-green-100">
-            {isFarmer && (
-              <Link
-                href="/dashboard/create-listing"
-                className="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors"
-              >
-                <Plus size={16} className="mr-2" />
-                Add Product
-              </Link>
-            )}
-            {isBuyer && (
-              <Link
-                href="/marketplace"
-                className="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors"
-              >
-                <Search size={16} className="mr-2" />
-                Browse Products
-              </Link>
-            )}
-          </div>
+            {/* Quick actions */}
+            <div className="p-4 border-t border-green-100">
+              {isFarmer && (
+                <Link
+                  href="/dashboard/create-listing"
+                  className="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors"
+                >
+                  <Plus size={16} className="mr-2" />
+                  Add Product
+                </Link>
+              )}
+              {isBuyer && (
+                <Link
+                  href="/dashboard/marketplace"
+                  className="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors"
+                >
+                  <Search size={16} className="mr-2" />
+                  Browse Products
+                </Link>
+              )}
+            </div>
 
-          {/* Bottom section */}
-          <div className="p-4 border-t border-green-100 space-y-1">
-            <Link
-              href="/dashboard/profile"
-              className="flex items-center px-4 py-3 text-sm font-medium text-green-700 rounded-lg hover:bg-green-50 hover:text-green-800 transition-all duration-200"
-            >
-              <Settings size={20} className="mr-3 text-green-500" />
-              Settings
-            </Link>
-            <button
-              onClick={handleLogout}
-              className="flex items-center w-full px-4 py-3 text-sm font-medium text-red-600 rounded-lg hover:bg-red-50 transition-all duration-200"
-            >
-              <LogOut size={20} className="mr-3" />
-              Sign Out
-            </button>
+            {/* Bottom section */}
+            <div className="p-4 border-t border-green-100 space-y-1">
+              <Link
+                href="/dashboard/profile"
+                className="flex items-center px-4 py-3 text-sm font-medium text-green-700 rounded-lg hover:bg-green-50 hover:text-green-800 transition-all duration-200"
+              >
+                <Settings size={20} className="mr-3 text-green-500" />
+                Settings
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="flex items-center w-full px-4 py-3 text-sm font-medium text-red-600 rounded-lg hover:bg-red-50 transition-all duration-200"
+              >
+                <LogOut size={20} className="mr-3" />
+                Sign Out
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Main content */}
-      <div className="lg:pl-64">
-        {/* Top header */}
-        <header className="bg-white shadow-sm border-b border-green-100">
+      <div className="flex-1 flex flex-col min-w-0 h-full">
+        {/* Top header - Fixed */}
+        <header className="bg-white shadow-sm border-b border-green-100 flex-shrink-0">
           <div className="flex items-center justify-between h-16 px-6">
             <button
               onClick={() => setSidebarOpen(true)}
@@ -274,9 +277,11 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           </div>
         </header>
 
-        {/* Page content */}
-        <main className="flex-1 p-6">
-          {children}
+        {/* Page content - Scrollable */}
+        <main className="flex-1 overflow-y-auto">
+          <div className="p-6">
+            {children}
+          </div>
         </main>
       </div>
     </div>

@@ -37,26 +37,87 @@ function PaymentsContent() {
       if (response.data) {
         setPayments(response.data.results || response.data)
       } else {
-        // Mock data for demonstration
+        // Mock data with realistic examples
         setPayments([
           {
-            id: "pay_001",
-            order_id: "ord_001",
-            amount: 2500,
+            id: "PAY_20251028_001",
+            order_id: "ORD_20251028_045",
+            amount: 12500,
             status: "completed",
             payment_method: "mpesa",
-            transaction_id: "QF7X8Y9Z",
+            transaction_id: "QH8K9L3M2N",
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString()
           },
           {
-            id: "pay_002",
-            order_id: "ord_002",
-            amount: 1800,
+            id: "PAY_20251027_089",
+            order_id: "ORD_20251027_122",
+            amount: 8750,
+            status: "completed",
+            payment_method: "mpesa",
+            transaction_id: "QG7J2K5L8P",
+            created_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+            updated_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString()
+          },
+          {
+            id: "PAY_20251027_045",
+            order_id: "ORD_20251027_078",
+            amount: 3200,
             status: "pending",
             payment_method: "card",
-            created_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-            updated_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+            transaction_id: "CH_1K8J9L2M3N",
+            created_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+            updated_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString()
+          },
+          {
+            id: "PAY_20251026_134",
+            order_id: "ORD_20251026_189",
+            amount: 15600,
+            status: "completed",
+            payment_method: "mpesa",
+            transaction_id: "QF6H8J9K2L",
+            created_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+            updated_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
+          },
+          {
+            id: "PAY_20251025_067",
+            order_id: "ORD_20251025_091",
+            amount: 5890,
+            status: "failed",
+            payment_method: "card",
+            transaction_id: "CH_1H7G8J9K1L",
+            created_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+            updated_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString()
+          },
+          {
+            id: "PAY_20251024_203",
+            order_id: "ORD_20251024_256",
+            amount: 22350,
+            status: "completed",
+            payment_method: "mpesa",
+            transaction_id: "QE5G7H8J9K",
+            created_at: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
+            updated_at: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString()
+          },
+          {
+            id: "PAY_20251023_145",
+            order_id: "ORD_20251023_178",
+            amount: 7420,
+            status: "completed",
+            payment_method: "mpesa",
+            transaction_id: "QD4F6G7H8J",
+            created_at: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+            updated_at: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString()
+          },
+          {
+            id: "PAY_20251022_089",
+            order_id: "ORD_20251022_123",
+            amount: 4560,
+            status: "cancelled",
+            payment_method: "card",
+            transaction_id: "CH_1C3E5F6G7H",
+            created_at: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString(),
+            updated_at: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString()
           }
         ])
       }
@@ -65,13 +126,34 @@ function PaymentsContent() {
       // Set mock data on error
       setPayments([
         {
-          id: "pay_001",
-          order_id: "ord_001",
-          amount: 2500,
+          id: "PAY_20251028_001",
+          order_id: "ORD_20251028_045",
+          amount: 12500,
           status: "completed",
           payment_method: "mpesa",
+          transaction_id: "QH8K9L3M2N",
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
+        },
+        {
+          id: "PAY_20251027_089",
+          order_id: "ORD_20251027_122",
+          amount: 8750,
+          status: "completed",
+          payment_method: "mpesa",
+          transaction_id: "QG7J2K5L8P",
+          created_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+          updated_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString()
+        },
+        {
+          id: "PAY_20251027_045",
+          order_id: "ORD_20251027_078",
+          amount: 3200,
+          status: "pending",
+          payment_method: "card",
+          transaction_id: "CH_1K8J9L2M3N",
+          created_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+          updated_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString()
         }
       ])
     } finally {
