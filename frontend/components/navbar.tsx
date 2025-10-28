@@ -22,7 +22,14 @@ export default function Navbar() {
   const navLinks = [
     { label: "Home", href: "/" },
     { label: "Marketplace", href: "/marketplace" },
-    ...(isAuthenticated ? [{ label: "Dashboard", href: "/dashboard" }] : []),
+    ...(isAuthenticated ? [
+      { label: "Dashboard", href: "/dashboard" },
+      { label: "Payments", href: "/payments" },
+      { label: "Blockchain", href: "/blockchain" },
+      { label: "AI Insights", href: "/insights" },
+      { label: "Deliveries", href: "/deliveries" },
+      { label: "Notifications", href: "/notifications" }
+    ] : []),
     { label: "Contact", href: "/contact" },
   ]
 
@@ -59,7 +66,7 @@ export default function Navbar() {
           {isAuthenticated ? (
             <>
               <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-primary/10">
-                <span className="text-sm font-medium text-foreground">{user?.name}</span>
+                <span className="text-sm font-medium text-foreground">{user?.first_name} {user?.last_name}</span>
                 <span className="text-xs bg-primary text-white px-2 py-1 rounded-full">{user?.role}</span>
               </div>
               <button
@@ -109,7 +116,7 @@ export default function Navbar() {
             {isAuthenticated ? (
               <>
                 <div className="border-t border-white/20 pt-4 mt-4">
-                  <p className="text-sm font-medium text-foreground mb-2">{user?.name}</p>
+                  <p className="text-sm font-medium text-foreground mb-2">{user?.first_name} {user?.last_name}</p>
                   <button
                     onClick={handleLogout}
                     className="w-full flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white font-semibold py-2 rounded-full transition-smooth"

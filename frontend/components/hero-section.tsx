@@ -8,7 +8,7 @@ export default function HeroSection() {
       className="relative w-full h-screen bg-cover bg-center flex items-center justify-center text-center overflow-hidden"
       style={{
         backgroundImage:
-          "url(/placeholder.svg?height=1080&width=1920&query=lush-green-farmland-kisii-kenya-agricultural-landscape)",
+          "url(/back2.jpeg)",
       }}
     >
       {/* Hero overlay */}

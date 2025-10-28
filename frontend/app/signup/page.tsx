@@ -6,8 +6,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/lib/auth-context"
 import Link from "next/link"
-import { Eye, EyeOff } from "lucide-react"
-import Navbar from "@/components/navbar"
+import { Eye, EyeOff, Home } from "lucide-react"
 
 export default function SignupPage() {
   const [formData, setFormData] = useState({
@@ -65,8 +64,15 @@ export default function SignupPage() {
 
   return (
     <main className="min-h-screen bg-background">
-      <Navbar />
-      <div className="flex items-center justify-center min-h-[calc(100vh-80px)] px-6 py-12">
+      {/* Home Link */}
+      <div className="absolute top-6 left-6 z-10">
+        <Link href="/" className="inline-flex items-center gap-2 text-foreground hover:text-primary transition-smooth">
+          <Home size={20} />
+          <span className="font-medium">Home</span>
+        </Link>
+      </div>
+
+      <div className="flex items-center justify-center min-h-screen px-6 py-12">
         <div className="w-full max-w-md">
           <div className="bg-white rounded-2xl shadow-lg p-8 border border-border">
             <h1 className="text-3xl font-bold text-foreground mb-2">Create Account</h1>

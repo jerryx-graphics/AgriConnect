@@ -24,7 +24,7 @@ class User(AbstractUser):
     )
 
     email = models.EmailField(unique=True)
-    phone_number = models.CharField(validators=[phone_regex], max_length=15, unique=True)
+    phone_number = models.CharField(validators=[phone_regex], max_length=15, unique=True, null=True, blank=True)
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='farmer')
     is_phone_verified = models.BooleanField(default=False)
     is_email_verified = models.BooleanField(default=False)
@@ -37,7 +37,7 @@ class User(AbstractUser):
     date_of_birth = models.DateField(null=True, blank=True)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username', 'phone_number', 'first_name', 'last_name']
+    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
 
     def __str__(self):
         return f"{self.email} ({self.role})"

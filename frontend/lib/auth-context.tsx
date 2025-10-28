@@ -9,7 +9,7 @@ interface User {
   email: string
   first_name: string
   last_name: string
-  role: "FARMER" | "BUYER" | "TRANSPORTER" | "COOPERATIVE" | "ADMIN"
+  role: "farmer" | "buyer" | "transporter" | "cooperative" | "admin"
   phone?: string
   location?: string
   is_verified?: boolean
@@ -61,9 +61,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const response = await apiClient.login(email, password)
 
-      if (response.data) {
-        setUser(response.data.user)
-        localStorage.setItem("agriconnect_user", JSON.stringify(response.data.user))
+      if (response.data && (response.data as any).user) {
+        setUser((response.data as any).user)
+        localStorage.setItem("agriconnect_user", JSON.stringify((response.data as any).user))
       } else {
         throw new Error(response.error || "Login failed")
       }
@@ -90,7 +90,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         password,
         first_name: firstName,
         last_name: lastName,
-        role: role.toUpperCase(),
+        role: role.toLowerCase(),
         phone
       })
 

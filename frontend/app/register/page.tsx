@@ -3,37 +3,80 @@
 import type React from "react"
 
 import { useState } from "react"
-import Navbar from "@/components/navbar"
-import { ArrowRight, CheckCircle } from "lucide-react"
+import { useAuth } from "@/lib/auth-context"
+import { useRouter, useSearchParams } from "next/navigation"
+import { ArrowRight, CheckCircle, Home } from "lucide-react"
 import Link from "next/link"
 
 export default function RegisterPage() {
-  const [role, setRole] = useState<"farmer" | "buyer" | null>(null)
+  const searchParams = useSearchParams()
+  const [role, setRole] = useState<"farmer" | "buyer" | null>(
+    (searchParams.get('role') as "farmer" | "buyer") || null
+  )
   const [formData, setFormData] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     email: "",
+    password: "",
+    confirmPassword: "",
     phone: "",
     location: "",
     farmSize: "",
     crops: "",
   })
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState("")
+  const { signup } = useAuth()
+  const router = useRouter()
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("Registration data:", { role, ...formData })
-    // Handle registration logic here
+    setError("")
+
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match")
+      return
+    }
+
+    if (!role) {
+      setError("Please select a role")
+      return
+    }
+
+    setIsLoading(true)
+    try {
+      await signup(
+        formData.email,
+        formData.password,
+        formData.firstName,
+        formData.lastName,
+        role,
+        formData.phone
+      )
+      router.push("/dashboard")
+    } catch (err: any) {
+      setError(err.message || "Registration failed. Please try again.")
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
     <main className="min-h-screen bg-background-secondary">
-      <Navbar />
+      {/* Home Link */}
+      <div className="absolute top-6 left-6 z-10">
+        <Link href="/" className="inline-flex items-center gap-2 text-foreground hover:text-primary transition-smooth">
+          <Home size={20} />
+          <span className="font-medium">Home</span>
+        </Link>
+      </div>
 
-      <div className="pt-32 pb-12 px-6">
+      <div className="pt-20 pb-12 px-6">
         <div className="max-w-2xl mx-auto">
           {/* Role Selection */}
           {!role ? (
@@ -93,16 +136,65 @@ export default function RegisterPage() {
                   : "Create your account and start buying"}
               </p>
 
+              {error && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+                  {error}
+                </div>
+              )}
+
               <form onSubmit={handleSubmit} className="bg-white rounded-xl p-8 shadow-sm border border-border">
-                {/* Name */}
+                {/* First Name */}
                 <div className="mb-6">
-                  <label className="block text-sm font-semibold text-foreground mb-2">Full Name</label>
+                  <label className="block text-sm font-semibold text-foreground mb-2">First Name</label>
                   <input
                     type="text"
-                    name="name"
-                    value={formData.name}
+                    name="firstName"
+                    value={formData.firstName}
                     onChange={handleInputChange}
-                    placeholder="Your full name"
+                    placeholder="Your first name"
+                    className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                    required
+                  />
+                </div>
+
+                {/* Last Name */}
+                <div className="mb-6">
+                  <label className="block text-sm font-semibold text-foreground mb-2">Last Name</label>
+                  <input
+                    type="text"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleInputChange}
+                    placeholder="Your last name"
+                    className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                    required
+                  />
+                </div>
+
+                {/* Password */}
+                <div className="mb-6">
+                  <label className="block text-sm font-semibold text-foreground mb-2">Password</label>
+                  <input
+                    type="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    placeholder="Create a strong password"
+                    className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                    required
+                    minLength={8}
+                  />
+                </div>
+
+                {/* Confirm Password */}
+                <div className="mb-6">
+                  <label className="block text-sm font-semibold text-foreground mb-2">Confirm Password</label>
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleInputChange}
+                    placeholder="Confirm your password"
                     className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                     required
                   />
@@ -182,10 +274,11 @@ export default function RegisterPage() {
                 {/* Submit Button */}
                 <button
                   type="submit"
-                  className="w-full bg-primary hover:bg-primary-dark text-white font-bold py-3 rounded-lg transition-smooth flex items-center justify-center gap-2"
+                  disabled={isLoading}
+                  className="w-full bg-primary hover:bg-primary-dark text-white font-bold py-3 rounded-lg transition-smooth flex items-center justify-center gap-2 disabled:opacity-50"
                 >
-                  Create Account
-                  <ArrowRight size={20} />
+                  {isLoading ? "Creating Account..." : "Create Account"}
+                  {!isLoading && <ArrowRight size={20} />}
                 </button>
 
                 {/* Login Link */}

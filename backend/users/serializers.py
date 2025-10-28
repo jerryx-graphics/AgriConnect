@@ -16,6 +16,9 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             'email', 'username', 'password', 'password_confirm',
             'first_name', 'last_name', 'phone_number', 'role'
         ]
+        extra_kwargs = {
+            'phone_number': {'required': False, 'allow_blank': True}
+        }
 
     def validate(self, attrs):
         if attrs['password'] != attrs['password_confirm']:
@@ -39,7 +42,7 @@ class UserLoginSerializer(serializers.Serializer):
         password = attrs.get('password')
 
         if email and password:
-            user = authenticate(email=email, password=password)
+            user = authenticate(username=email, password=password)
             if not user:
                 raise serializers.ValidationError('Invalid credentials')
             if not user.is_active:
