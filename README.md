@@ -121,7 +121,7 @@ AgriConnect/
 ---
 
 ## Team (AgriBridge)
-- **Lead Developer:** Jerimia Ouko
+- **Team Lead:** Jerimia Ouko
 - **Backend Developer:** Malack Arori
 - **Frontend Developer:** Vincent Jossy
 - **Frontend Developer:** Kimani Simeon
